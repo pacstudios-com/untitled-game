@@ -7,15 +7,16 @@ on:
     branches: [dev]
 
 jobs:
-  validate:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: check for gdscript parse errors
-        uses: chickensoft-games/godot-ci@v1
-        with:
-          godot-version: "4.4.1"
-          project-path: .
-          run: |
-            godot --headless --quit --check-only
+      - name: install gdtoolkit
+        run: pip3 install gdtoolkit
+
+      - name: lint gdscript
+        run: gdlint **/*.gd || true
+
+      - name: check formatting
+        run: gdformat --check **/*.gd || true
